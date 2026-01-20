@@ -1,0 +1,184 @@
+<page-header [action]="headerActionTmpl" [breadcrumb]="breadcrumb" [content]="content" title="Product Categories">
+    <ng-template #breadcrumb>
+        <app-breadcrumbs [crumbs]="crumbs"></app-breadcrumbs>
+    </ng-template>
+
+    <ng-template #headerActionTmpl>
+        <app-expand-collapse-button [(open)]="isExpanded"></app-expand-collapse-button>
+    </ng-template>
+
+    <ng-template #content>
+        <form *ngIf="isExpanded" autocomplete="off" nz-form>
+            <div nz-row>
+                <div class="ph-main m-t-1em" nz-col nzSpan="24">
+                    <nz-form-control [nzValidateStatus]="hasError ? 'error': 'success'" nzErrorTip="">
+                        <input (input)="updateHasError($event)"
+                               [(ngModel)]="searchTerm"
+                               name="productCategoryName"
+                               nz-input
+                               placeholder="Enter category name" type="text"/>
+                    </nz-form-control>
+
+                </div>
+
+                <div [nzLg]="24" [nzXs]="24" class="ph-main m-t-2em m-t-sm-2em m-b-2em" nz-col nzSpan="24">
+                    <div nz-row nzJustify="space-between">
+                        <div [nzLg]="12" [nzSpan]="12" [nzXs]="10" nz-col>
+                            <app-search-reset-button
+                                [props]="{
+                                onSearchAction: onSearchCategory,
+                                isLoadingSearchResult: isLoadingSearch,
+                                onResetAction: onResetSearch,
+                                onCancelAction: onCancelSearch
+                                }"
+                            ></app-search-reset-button>
+                        </div>
+
+                        <div [nzLg]="12" [nzSpan]="12" [nzXs]="10" class="text-align-end" nz-col>
+                            <nz-space nzSize="small">
+                                <app-button *nzSpaceItem [props]="{handler: onOpenModal, title: 'Add', icon: 'plus'}"
+                                ></app-button>
+                                <app-export-upload-button
+                                    *nzSpaceItem
+                                    [onDownload]="handleExportData" [onUpload]="handleUpload"
+                                ></app-export-upload-button>
+                            </nz-space>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+</page-header>
+
+<nz-card>
+    <app-table [colHeadings]="cols"
+               [dataList]="categories"
+               [rowTemplates]="[nameTmpl, descriptionTmpl, groupTmpl, statusTmpl, actionTmpl]"
+    ></app-table>
+</nz-card>
+
+<nz-drawer
+    (nzOnClose)="onCloseModal()"
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzFooter]="contentFooterTmpl"
+    [nzMaskClosable]="false"
+    [nzTitle]="pageTitle"
+    [nzVisible]="showForm"
+    [nzWidth]="size"
+>
+    <div *nzDrawerContent>
+        <ng-container [ngTemplateOutlet]="contentFormTmpl"></ng-container>
+    </div>
+
+</nz-drawer>
+
+
+<!--Form Element-->
+<ng-template #contentFormTmpl>
+    <form (submit)="onCreate()"
+          [formGroup]="categoryForm"
+          autocomplete="off"
+          nz-form
+          nzLayout="vertical"
+    >
+        <div [nzSpan]="24" nz-col>
+
+            <nz-form-item>
+                <nz-radio-group [(ngModel)]="isSubCategory" [ngModelOptions]="{standalone: true}">
+                    <label class="space-r">
+                        <app-hint [props]="{title: popTitle, content: popParent}"></app-hint>
+                        IS THIS A SUB CATEGORY?
+                    </label>
+                    <label [nzValue]="true" nz-radio>YES</label>
+                    <label [nzValue]="false" nz-radio>NO</label>
+                </nz-radio-group>
+
+                <ng-template #popParent>
+                    <span [innerHTML]="popParentHint"></span>
+                </ng-template>
+            </nz-form-item>
+
+            <ng-container *ngIf="isSubCategory">
+                <app-product-category-search
+                    (selectedChange)="onParentCategorySelected($event)"></app-product-category-search>
+            </ng-container>
+
+            <nz-form-item>
+                <nz-form-label>Title</nz-form-label>
+                <nz-form-control nzErrorTip="">
+                    <input
+                        formControlName="title"
+                        nz-input
+                        placeholder="Enter Title"
+                        type="text"
+                    />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Description</nz-form-label>
+                <nz-form-control>
+                        <textarea formControlName="description"
+                                  nz-input
+                                  placeholder="Enter Description"
+                        ></textarea>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+    </form>
+</ng-template>
+
+<!--Content Footer-->
+<ng-template #contentFooterTmpl>
+    <button (click)="onCloseModal()" nz-button nzType="default">Cancel</button>
+    <button (click)="onCreate()" [nzLoading]="isLoading" nz-button nzType="primary">Submit</button>
+</ng-template>
+
+<!--Table Row Templates -->
+<!--title-->
+<ng-template #nameTmpl let-item="item">
+    <app-table-item-editable
+        (valueChange)="onCacheValueChange($event, item, 'title')"
+        [props]="{fieldName: 'title', initialValue: item.title, isEditMode: canEditItem(item)}"
+        [value]="editObj[item.id] && editObj[item.id].data.title"
+        class="w-min"
+    ></app-table-item-editable>
+</ng-template>
+
+<!--description-->
+<ng-template #descriptionTmpl let-item="item">
+    <app-table-item-editable
+        (valueChange)="onCacheValueChange($event, item, 'description')"
+        [props]="{fieldName: 'description', initialValue: item.description, isEditMode: canEditItem(item)}"
+        [value]="editObj[item.id] && editObj[item.id].data.description"
+    ></app-table-item-editable>
+</ng-template>
+
+<!-- category parent -->
+<ng-template #groupTmpl let-item="item">
+    <label>{{item.parent?.title ?? '-'}}</label>
+</ng-template>
+
+<ng-template #statusTmpl let-item="item">
+    <app-record-status-badge [status]="item.isActiveStatus"></app-record-status-badge>
+</ng-template>
+
+<!--action-->
+<ng-template #actionTmpl let-item="item">
+    <app-update-delete-action
+        [buttons]="[TableButtonEnum.EDIT, TableButtonEnum.TOGGLE_STATUS, TableButtonEnum.DELETE]"
+        [item]="item"
+        [props]="{
+            saveEditHandler: onSaveEdit,
+            cancelEditHandler: onCancelEdit,
+            toggleEditHandler: onToggleEdit,
+            cancelDeleteHandler: onCancelDelete,
+            confirmDeleteHandler: onConfirmDelete,
+            editMap: editObj,
+            confirmToggleStatusHandler: onConfirmToggleStatus
+       }"
+    ></app-update-delete-action>
+</ng-template>

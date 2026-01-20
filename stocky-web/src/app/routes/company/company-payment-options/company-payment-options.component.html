@@ -1,0 +1,22 @@
+<page-header [breadcrumb]="breadcrumb">
+    <ng-template #breadcrumb>
+        <app-breadcrumbs [crumbs]="crumbs"></app-breadcrumbs>
+    </ng-template>
+</page-header>
+
+<nz-card>
+
+    <app-company-payment-option-button [props]="{
+            size: 'large',
+            title: 'Add Payment Option',
+            icon: 'plus',
+            showTable: false,
+            showForm: true
+        }"></app-company-payment-option-button>
+
+    <div class="mt4">
+        <app-company-payment-option-table></app-company-payment-option-table>
+    </div>
+
+
+</nz-card>

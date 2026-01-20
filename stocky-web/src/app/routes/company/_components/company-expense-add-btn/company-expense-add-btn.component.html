@@ -1,0 +1,120 @@
+<app-button [props]="{handler: open, title: 'Add', icon: 'plus'}"></app-button>
+
+<ng-container *ngIf="isDrawer; else modalTmpl">
+    <nz-drawer
+        (nzOnClose)="toggle(false, ModalOrDrawer.DRAWER)"
+        [nzBodyStyle]="{ overflow: 'auto' }"
+        [nzFooter]="contentFooterBtnTmpl"
+        [nzMaskClosable]="false"
+        [nzVisible]="showDrawer"
+        [nzWidth]="drawerSize"
+        nzTitle="Add Expenses"
+    >
+        <div *nzDrawerContent>
+            <ng-container [ngTemplateOutletContext]="{form: categoryForm}"
+                          [ngTemplateOutlet]="contentFormTmpl"></ng-container>
+        </div>
+    </nz-drawer>
+</ng-container>
+
+<ng-template #modalTmpl>
+    <nz-modal
+        (nzOnCancel)="toggle(false, ModalOrDrawer.MODAL)"
+        (nzOnOk)="onCreate()"
+        [(nzVisible)]="showModal"
+        [nzMaskClosable]="false"
+        nzTitle="Add New Expenses"
+    >
+        <div *nzModalContent [nzLg]="{ span: 24, offset: 0 }" [nzXs]="{ span: 24, offset: 0 }" nz-col>
+            <ng-container [ngTemplateOutletContext]="{form: categoryForm}"
+                          [ngTemplateOutlet]="contentFormTmpl"></ng-container>
+        </div>
+        <div *nzModalFooter>
+            <ng-container [ngTemplateOutlet]="contentFooterBtnTmpl"></ng-container>
+        </div>
+
+    </nz-modal>
+</ng-template>
+
+<ng-template #contentFormTmpl let-form="form">
+    <form (submit)="onCreate()"
+          [formGroup]="categoryForm"
+          autocomplete="off"
+          nz-form
+          nzLayout="vertical"
+    >
+        <div [nzSpan]="24" nz-col>
+
+            <nz-form-item>
+                <nz-form-label>Expenses Category:</nz-form-label>
+
+                <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip=""
+                    nzValidateStatus="success"
+                >
+                    <div nz-row nzGutter="4">
+                        <div nz-col nzFlex="auto">
+                            <app-company-expense-category-dropdown
+                                [formProps]="{formGroup: categoryForm, controlName: 'category'}"
+                            ></app-company-expense-category-dropdown>
+                        </div>
+                        <div nz-col nz-tooltip nzFlex="30px" nzTooltipPlacement="top"
+                             nzTooltipTitle="Update expenses categories">
+                            <app-company-expense-category-add-btn></app-company-expense-category-add-btn>
+                        </div>
+                    </div>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Amount</nz-form-label>
+                <nz-form-control
+                    [nzSpan]="24"
+                    [nzValidateStatus]="status('amount')"
+                    nzErrorTip=""
+                >
+                    <nz-input-number
+                        [formControlName]="'amount'"
+                        [nzMin]="1"
+                        [nzStep]="1" class="w-100"
+                        nzPlaceHolder="Enter amount"></nz-input-number>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Date</nz-form-label>
+                <app-date-picker (selectChange)="onDateSelected($event)"
+                                 [hasError]="isFormControlInvalid('recordDate', categoryForm)"
+                                 [select]="defaultDate"
+                ></app-date-picker>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Comment</nz-form-label>
+                <nz-form-control [nzValidateStatus]="status('comment')"
+                                 nzErrorTip="">
+                        <textarea
+                            formControlName="comment"
+                            name="comment"
+                            nz-input
+                            placeholder="Enter comment about the expenses"
+                        ></textarea>
+                </nz-form-control>
+            </nz-form-item>
+
+            <!-- <nz-form-item>
+                 <nz-form-label>Attach File</nz-form-label>
+                 <app-upload-file></app-upload-file>
+             </nz-form-item>-->
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #contentFooterBtnTmpl>
+    <div class="fr">
+        <button (click)="toggle(false, ModalOrDrawer.ANY)" nz-button nzType="default">Cancel</button>
+        <button (click)="onCreate()" [nzLoading]="isLoading" nz-button nzType="primary">Submit</button>
+    </div>
+</ng-template>

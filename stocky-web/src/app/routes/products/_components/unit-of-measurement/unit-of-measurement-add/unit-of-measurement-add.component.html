@@ -1,0 +1,39 @@
+<app-button [props]="{icon: buttonIcon, title: buttonText, handler: showModal, size: 'default'}"></app-button>
+
+<nz-modal (nzOnCancel)="isVisible = false"
+          [(nzVisible)]="isVisible"
+          [nzFooter]="' '"
+          nzTitle="Unit of Measurements"
+>
+    <ng-container *nzModalContent>
+
+        <form (ngSubmit)="onCreate()" [formGroup]="form" [nzLayout]="'inline'" nz-form>
+            <nz-form-item>
+                <nz-form-control nzErrorTip="">
+                    <input formControlName="title" nz-input placeholder="Enter Title"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control nzErrorTip="">
+                    <input formControlName="unit" nz-input placeholder="Enter Unit code" type="text"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <button [disabled]="!form.valid" [nzLoading]="isSaving" nz-button nzType="primary">
+                        <span nz-icon nzTheme="outline" nzType="save"></span>
+                        Save
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+
+        <div class="wd-100p m-t-1em">
+            <ng-container *ngIf="showTable">
+                <app-unit-of-measure-table></app-unit-of-measure-table>
+            </ng-container>
+
+        </div>
+
+    </ng-container>
+</nz-modal>

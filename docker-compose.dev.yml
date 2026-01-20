@@ -1,0 +1,44 @@
+# Development Docker Compose - extends the production configuration
+version: '3.8'
+
+services:
+  postgres:
+    environment:
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "5432:5432"
+
+  stocky-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+      target: builder
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      LOGGING_LEVEL_ROOT: DEBUG
+      LOGGING_LEVEL_COM_JAMESAWORO: DEBUG
+      SPRING_JPA_SHOW_SQL: "true"
+      JAVA_OPTS: "-Xmx1024m -Xms512m"
+    volumes:
+      - ./stocky-api:/app/stocky-api
+      - ~/.m2:/home/appuser/.m2
+    ports:
+      - "8080:8080"
+
+  stocky-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      target: builder
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./stocky-web/src:/app/src
+      - ./stocky-web/angular.json:/app/angular.json
+    ports:
+      - "4200:4200"
+    command: npm start
+
+  pgadmin:
+    ports:
+      - "5050:80"

@@ -1,0 +1,26 @@
+<app-button
+    [props]="{
+        icon: buttonIcon,
+        title: buttonText,
+        handler: showModal,
+        size: 'default'
+    }"
+></app-button>
+
+<nz-modal (nzOnCancel)="isVisible = false"
+          [(nzVisible)]="isVisible"
+          [nzFooter]="' '"
+          nzTitle="Product Status"
+>
+    <ng-container *nzModalContent>
+
+        <app-product-status-add></app-product-status-add>
+
+        <ng-container *ngIf="showTable">
+            <app-product-status-table></app-product-status-table>
+        </ng-container>
+
+
+    </ng-container>
+</nz-modal>
+

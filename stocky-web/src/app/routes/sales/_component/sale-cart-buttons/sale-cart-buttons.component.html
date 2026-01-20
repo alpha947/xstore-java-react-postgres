@@ -1,0 +1,42 @@
+<div class="container">
+
+    <div class="column-1 mgb--13">
+        <app-sale-cart-payment-options></app-sale-cart-payment-options>
+    </div>
+
+    <div class="column-1">
+        <app-simple-button
+            [action]="handleSaveTransaction"
+            [usePopConfirm]="true"
+            buttonClass="ml1 mr1" buttonText="Pay"
+            buttonType="primary" icon="credit-card"
+        >
+        </app-simple-button>
+    </div>
+
+    <div class="column-2">
+
+        <app-simple-button
+            [action]="handleClearButton"
+            [usePopConfirm]="true"
+            buttonText="Clear" class="flex-grow-1 ml2"
+            icon="delete" popCancelText="No, Cancel"
+            popOkText="Yes, Clear Items"
+        >
+        </app-simple-button>
+
+
+        <!--            [acl]="{ ability: ['ACCESS_ACTION_SALE_SAVE_ORDER'], mode: 'allOf' }"-->
+        <app-simple-button
+            [action]="handleSaveAsOrderButton"
+            [disabled]="true"
+            [usePopConfirm]="true"
+            buttonText="Save"
+            class="flex-grow-1 ml2 mr-11"
+            icon="delete" popCancelText="No, Cancel"
+            popOkText="Yes, Save as order"
+        ></app-simple-button>
+
+    </div>
+</div>
+

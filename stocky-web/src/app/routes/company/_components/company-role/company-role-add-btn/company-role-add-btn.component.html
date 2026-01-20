@@ -1,0 +1,60 @@
+<app-button
+    [props]="{
+        icon: props.icon,
+        size: props.size,
+        title: props.title,
+        handler: toggle
+    }"
+></app-button>
+
+<ng-container *ngIf="isDrawer; else modalTmpl">
+    <nz-drawer
+        (nzOnClose)="toggle()"
+        [nzBodyStyle]="{ overflow: 'auto' }"
+        [nzFooter]="contentFooterBtnTmpl"
+        [nzMaskClosable]="false"
+        [nzVisible]="showDrawer"
+        [nzWidth]="drawerSize"
+        nzTitle="Create Role"
+    >
+        <div *nzDrawerContent>
+            <ng-container [ngTemplateOutlet]="contentFormTmpl"></ng-container>
+        </div>
+
+    </nz-drawer>
+</ng-container>
+
+<ng-template #modalTmpl>
+    <nz-modal
+        (nzOnCancel)="toggle()"
+        (nzOnOk)="onCreate()"
+        [(nzVisible)]="showModal"
+        [nzMaskClosable]="false"
+        nzTitle="Create Role"
+    >
+        <div *nzModalContent [nzLg]="{ span: 24, offset: 0 }" [nzXs]="{ span: 24, offset: 0 }" nz-col>
+            <ng-container [ngTemplateOutlet]="contentFormTmpl"></ng-container>
+        </div>
+        <div *nzModalFooter>
+            <ng-container [ngTemplateOutlet]="contentFooterBtnTmpl"></ng-container>
+        </div>
+
+    </nz-modal>
+</ng-template>
+
+<ng-template #contentFormTmpl>
+    <app-company-role-form
+        #roleFormComponent
+        (formActionEmitter)="onHandleFormEmit($event)"
+        [popup]="popup"
+        [role]="role"
+    ></app-company-role-form>
+</ng-template>
+
+<ng-template #contentFooterBtnTmpl>
+    <app-footer-button
+        [action]="{submitAction: onCreate, cancelAction: toggle }"
+        [isSaving]="isSaving"
+        [props]="{cancelArgs: ModalOrDrawer.ANY}"
+    ></app-footer-button>
+</ng-template>

@@ -1,0 +1,18 @@
+<div class="container">
+    <header-i18n class="langs" showLangText="false"></header-i18n>
+    <div class="wrap">
+        <div class="top">
+            <div class="head">
+                <img class="logo" src="./assets/images/logo.svg"/>
+            </div>
+            <div class="desc">Login to continue</div>
+        </div>
+        <router-outlet></router-outlet>
+        <global-footer [links]="links">
+            Copyright
+            <i class="anticon anticon-copyright"></i>
+            {{getYear()}}
+            <a>Stocky POS</a>
+        </global-footer>
+    </div>
+</div>

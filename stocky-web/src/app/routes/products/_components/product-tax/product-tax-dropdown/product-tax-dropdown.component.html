@@ -1,0 +1,18 @@
+<nz-select
+    (ngModelChange)="onValueChange($event)"
+    [(ngModel)]="selectedOptions"
+    [class]="class"
+    [nzLoading]="isLoading"
+    nzAllowClear
+
+    nzMode="multiple"
+    nzPlaceHolder="Please select"
+    nzShowSearch
+    nzSize="default"
+>
+    <nz-option
+        *ngFor="let option of listOfOption"
+        [nzLabel]="option.label"
+        [nzValue]="option.value"
+    ></nz-option>
+</nz-select>

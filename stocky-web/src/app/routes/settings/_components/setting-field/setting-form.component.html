@@ -1,0 +1,54 @@
+<ng-container *ngIf="settings$ | async as settingOptions; else loading">
+
+    <form nz-form nzLayout="horizontal">
+
+        <ng-container *ngFor="let setting of settingOptions">
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="8" nzLabelAlign="left">
+                    <ng-container *ngIf="setting.settingHint">
+                        <app-hint [props]="{title: popTitle, content: setting.settingHint}"></app-hint>
+                    </ng-container>
+                    {{setting.settingTitle}}
+                </nz-form-label>
+                <nz-form-control [nzSpan]="8">
+                    <div [ngSwitch]="setting.settingField">
+
+                        <div *ngSwitchCase="settingField.INPUT">
+                            <app-setting-field-input [setting]="setting"></app-setting-field-input>
+                        </div>
+
+                        <div *ngSwitchCase="settingField.SELECT">
+                            <app-setting-field-select [setting]="setting"></app-setting-field-select>
+                        </div>
+
+                        <div *ngSwitchCase="settingField.TEXTAREA">
+                            <app-setting-field-textarea [setting]="setting"></app-setting-field-textarea>
+                        </div>
+
+                        <div *ngSwitchCase="settingField.RADIO">
+                            <app-setting-field-radio [setting]="setting"></app-setting-field-radio>
+                        </div>
+
+                        <div *ngSwitchCase="settingField.DATE">
+                            <app-setting-field-date [setting]="setting"></app-setting-field-date>
+
+                        </div>
+
+                        <div *ngSwitchCase="settingField.TOGGLE">
+                            <app-setting-field-toggle [setting]="setting"></app-setting-field-toggle>
+                        </div>
+                    </div>
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </ng-container>
+
+    </form>
+
+</ng-container>
+
+<ng-template #loading>
+    <app-loading-card></app-loading-card>
+</ng-template>

@@ -1,0 +1,22 @@
+<ng-container *ngIf="isTemplateRef; else stringContentTmpl" [ngTemplateOutlet]="contentRef"></ng-container>
+
+<ng-template #stringContentTmpl>
+    <ng-container *ngIf="content ; else emptyContentTmpl " [ngTemplateOutlet]="slicedContentTmpl"></ng-container>
+</ng-template>
+
+
+<ng-template #emptyContentTmpl>
+    <span [class]="class" class="b">-</span>
+</ng-template>
+
+
+<ng-template #slicedContentTmpl>
+    <ng-container *ngIf="showToolTip; else noToolTipTmpl">
+        <span [class]="class" [nzTooltipColor]="color" [nzTooltipTitle]="content" nz-tooltip>{{slicedContent}}</span>
+    </ng-container>
+
+    <ng-template #noToolTipTmpl>
+        <span [class]="class">{{slicedContent}}</span>
+    </ng-template>
+
+</ng-template>

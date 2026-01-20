@@ -1,0 +1,10 @@
+<nz-form-control [nzValidateStatus]="status" nzErrorTip="">
+    <nz-date-picker (ngModelChange)="onChange($event)"
+                    [(ngModel)]="selectedDate"
+                    [nzFormat]="dateFormat"
+                    [nzMode]="mode"
+                    class="wd-100p"
+                    name="datePicker"
+                    [nzDisabledDate]="validateFn"
+    ></nz-date-picker>
+</nz-form-control>

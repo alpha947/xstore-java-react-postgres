@@ -1,0 +1,30 @@
+<label *ngIf="props.showLabel"> Expenses Category </label>
+
+<ng-container *ngIf="formProps && formProps.formGroup && formProps.controlName; else modelTmpl" [formGroup]="formProps.formGroup!">
+
+    <nz-form-control nzSpan="24">
+        <nz-select
+            [formControlName]="formProps.controlName!"
+            nzAllowClear nzPlaceHolder="Select a category" nzShowSearch>
+            <ng-container *ngIf="categories | async as list ">
+                <nz-option *ngFor="let item of list" [nzLabel]="item.title!" [nzValue]="item"></nz-option>
+            </ng-container>
+        </nz-select>
+    </nz-form-control>
+
+</ng-container>
+
+<ng-template #modelTmpl>
+    <nz-form-control nzSpan="24">
+        <nz-select
+            (ngModelChange)="onCategorySelected($event)"
+            [ngModel]="select"
+            nzAllowClear nzPlaceHolder="Select a category" nzShowSearch
+        >
+            <ng-container *ngIf="categories | async as list ">
+                <nz-option *ngFor="let item of list" [nzLabel]="item.title!" [nzValue]="item"></nz-option>
+            </ng-container>
+        </nz-select>
+    </nz-form-control>
+
+</ng-template>

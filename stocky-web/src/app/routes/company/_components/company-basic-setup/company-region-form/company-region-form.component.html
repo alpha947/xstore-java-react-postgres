@@ -1,0 +1,43 @@
+<form (ngSubmit)="onSaveFormDetails()" [autocomplete]="'off'" [formGroup]="form" nz-form nzLayout="vertical">
+
+    <div nz-row nzGutter="8">
+        <div [nzLg]="8" [nzSm]="24" nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzFor="language" nzRequired>Language</nz-form-label>
+                <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('regionLanguage', form)" nzErrorTip="">
+                    <nz-select formControlName="regionLanguage" id="language" nzPlaceHolder="Please select...">
+                        <nz-option nzLabel="en" nzValue="en"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div [nzLg]="8" [nzSm]="24" nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzFor="currency" nzRequired>Currency</nz-form-label>
+                <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('regionCurrency', form)" nzErrorTip="">
+                    <nz-select formControlName="regionCurrency" id="currency" nzPlaceHolder="Please select...">
+                        <nz-option nzLabel="NGN (₦)" nzValue="₦"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div [nzLg]="8" [nzSm]="24" nz-col>
+            <nz-form-item>
+                <nz-form-label nzFor="timeZone" nzRequired>TimeZone</nz-form-label>
+                <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('regionTimeZone', form)" nzErrorTip="">
+                    <nz-select formControlName="regionTimeZone" id="timeZone" nzPlaceHolder="Please select...">
+                        <nz-option nzLabel="WAT" nzValue="wat"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+    </div>
+
+    <div nz-col nzSpan="24">
+        <button [nzLoading]="isLoading" nz-button nzType="primary" type="submit">Save Administrators Details</button>
+    </div>
+
+</form>

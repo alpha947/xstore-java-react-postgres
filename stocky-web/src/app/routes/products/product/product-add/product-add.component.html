@@ -1,0 +1,24 @@
+<div class="wd-100p">
+
+    <nz-tabset [(nzSelectedIndex)]="startPoint" nzType="line">
+        <nz-tab *ngFor="let tab of tabs; let i = index" [nzTitle]="tab.title" nzClosable>
+            <form nz-form nzLayout="vertical">
+                <ng-container [ngTemplateOutletContext]="{form: form}"
+                              [ngTemplateOutlet]="tab.template"></ng-container>
+            </form>
+        </nz-tab>
+    </nz-tabset>
+
+</div>
+
+<ng-template #basicTmpl let-form="form">
+    <app-product-basic-tab [formGroup]="form"></app-product-basic-tab>
+</ng-template>
+
+<ng-template #priceTmpl let-form="form">
+    <app-setting-locker [disabled]="isStockEnabled" toolTip="Stock Settings is currently active; product prices will derive from stock">
+        <app-product-price-tab [formGroup]="form"></app-product-price-tab>
+    </app-setting-locker>
+    
+</ng-template>
+

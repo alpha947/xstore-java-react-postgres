@@ -1,0 +1,19 @@
+<page-header [breadcrumb]="breadcrumb">
+    <ng-template #breadcrumb>
+        <app-breadcrumbs [crumbs]="crumbs"></app-breadcrumbs>
+    </ng-template>
+</page-header>
+<nz-card>
+    <app-company-location-add-btn [props]="{
+            size: 'large',
+            title: 'Add Location',
+            icon: 'plus',
+            showTable: false,
+            showForm: true
+        }"></app-company-location-add-btn>
+
+    <div class="mt4">
+        <app-company-location-table></app-company-location-table>
+    </div>
+</nz-card>
+

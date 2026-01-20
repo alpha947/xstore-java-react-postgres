@@ -1,0 +1,59 @@
+<nz-card>
+    <fieldset [formGroup]="formGroup!">
+        <h3 class="m-b-1em">
+            <app-hint>
+                <span [innerHTML]="popover.PRODUCT_PRICE_DETAIL"></span>
+            </app-hint>
+            Product Price & Tax
+        </h3>
+
+        <fieldset formGroupName="price">
+            
+            <nz-form-item>
+                <nz-form-label>Cost Price:</nz-form-label>
+                <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip="Enter cost price"
+                    nzValidateStatus="success"
+                >
+                    <nz-input-number
+                        (input)="calculateSellingPrice()"
+                        [nzMin]="1"
+                        [nzPlaceHolder]="'Enter cost price'"
+                        [nzStep]="1" class="wd-100p"
+                        formControlName="costPrice"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Markup %:</nz-form-label>
+                <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip="Enter markup percent"
+                    nzValidateStatus="success"
+                >
+                    <nz-input-number
+                        (input)="calculateSellingPrice()"
+                        [nzMin]="1"
+                        [nzStep]="1"
+                        class="wd-100p"
+                        formControlName="markup"
+                        nzPlaceHolder="Enter markup percent"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Selling Price:</nz-form-label>
+                <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip="Enter cost price"
+                    nzValidateStatus="success"
+                >
+                    <nz-input-number [nzMin]="1" [nzStep]="1" class="wd-100p" formControlName="sellingPrice"
+                                     nzPlaceHolder="Enter selling price or leave it blank"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+
+        </fieldset>
+    </fieldset>
+</nz-card>

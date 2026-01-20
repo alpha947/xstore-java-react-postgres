@@ -1,0 +1,24 @@
+<page-header [breadcrumb]="breadcrumb" title="Dashboard Setting">
+    <ng-template #breadcrumb>
+        <app-breadcrumbs [crumbs]="crumbs"></app-breadcrumbs>
+    </ng-template>
+
+</page-header>
+
+<nz-card>
+    <div class="wd-100p">
+        <article nz-typography>
+            <h5 nz-typography>Configure Dashboard </h5>
+            <p nz-typography>
+                The Dashboard Setting Page allows you to customize and configure various settings related to your
+                dashboard.
+                <br>
+                Here, you can toggle on/off different features, adjust the layout and appearance of your
+                dashboard, and manage your data sources.
+            </p>
+        </article>
+        <nz-divider></nz-divider>
+
+        <app-setting-form [settings$]="settings"></app-setting-form>
+    </div>
+</nz-card>

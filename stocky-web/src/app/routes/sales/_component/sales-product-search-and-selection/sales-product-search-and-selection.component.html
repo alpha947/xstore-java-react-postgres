@@ -1,0 +1,46 @@
+<nz-card class="h-100">
+    <app-sales-product-search></app-sales-product-search>
+
+    <nz-divider nzType="horizontal"></nz-divider>
+
+    <div class="">
+        <div class="flex justify-between mb2">
+            <div>
+                <app-icon-button
+                    [action]="handleClearSearchResult"
+                    [icon]="'clear'"
+                    [text]="'Clear'"
+                    [tooltipTitle]="'Clear the list of products search result'"
+                ></app-icon-button>
+            </div>
+
+            <div class="">
+                <span>Filters: </span>
+                <span class="mr2">
+                    <app-icon-button
+                        [action]="toggleLowStockVisibility"
+                        [class]="'tr'"
+                        [icon]="lowStockVisibility ? 'eye': 'eye-invisible'"
+                        [tooltipTitle]="'Show or hide products with zero stock balance'"
+                    ></app-icon-button>
+                </span>
+
+                <span>
+                    <app-icon-button
+                        [action]="toggleView"
+                        [class]="'tr'"
+                        [icon]="isListView ? 'unordered-list': 'appstore'"
+                        [tooltipTitle]="'Toggle between list and grid layout'"
+                    ></app-icon-button>
+                </span>
+            </div>
+
+        </div>
+
+        <app-sales-product-selection
+            [type]="isListView ? display.list: display.grid"
+        ></app-sales-product-selection>
+
+    </div>
+
+</nz-card>

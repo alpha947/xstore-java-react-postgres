@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: stocky-postgres
+    environment:
+      POSTGRES_USER: stockyuser
+      POSTGRES_PASSWORD: stockypassword
+      POSTGRES_DB: stockydb
+      TZ: UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockyuser -d stockydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stocky-network
+    restart: unless-stopped
+
+  # Spring Boot API
+  stocky-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: stocky-api
+    environment:
+      # Server Configuration
+      PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      
+      # Database Configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/stockydb
+      SPRING_DATASOURCE_USERNAME: stockyuser
+      SPRING_DATASOURCE_PASSWORD: stockypassword
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      
+      # JPA/Hibernate Configuration
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_SHOW_SQL: "false"
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE: "20"
+      SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION: "true"
+      
+      # JWT Configuration (à adapter selon votre configuration)
+      JWT_SECRET: your-secret-key-change-this-in-production
+      JWT_EXPIRATION: 86400000
+      JWT_ISSUER: stocky-app
+      
+      # Application Server Settings
+      SERVER_ERROR_INCLUDE_MESSAGE: always
+      SERVER_ERROR_INCLUDE_EXCEPTION: "true"
+      SERVER_ERROR_INCLUDE_BINDING_ERRORS: always
+      SERVER_ERROR_INCLUDE_STACKTRACE: always
+      
+      # Logging
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_LEVEL_COM_JAMESAWORO: DEBUG
+      
+      # Java Options
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    
+    ports:
+      - "8080:8080"
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+    
+    networks:
+      - stocky-network
+    
+    restart: unless-stopped
+    
+    # Optional: volume for logs
+    volumes:
+      - api_logs:/app/logs
+
+  # Angular Frontend
+  stocky-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: stocky-web
+    environment:
+      - NODE_ENV=production
+    
+    ports:
+      - "80:80"
+    
+    depends_on:
+      - stocky-api
+    
+    networks:
+      - stocky-network
+    
+    restart: unless-stopped
+
+  # Optional: PgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: stocky-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@stocky.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    
+    ports:
+      - "5050:80"
+    
+    depends_on:
+      - postgres
+    
+    networks:
+      - stocky-network
+    
+    restart: unless-stopped
+    
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  api_logs:
+    driver: local
+
+networks:
+  stocky-network:
+    driver: bridge

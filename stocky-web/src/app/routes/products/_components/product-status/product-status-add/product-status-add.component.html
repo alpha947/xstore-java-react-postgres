@@ -1,0 +1,25 @@
+<form (ngSubmit)="onCreate()" [formGroup]="form" [nzLayout]="'inline'" nz-form>
+
+    <nz-form-item>
+        <nz-form-control nzErrorTip="">
+            <input formControlName="title" nz-input placeholder="Enter status"/>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-control nzErrorTip="">
+            <input formControlName="description" nz-input placeholder="Enter description" type="text"/>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-control>
+            <button [disabled]="!form.valid" [nzLoading]="isSaving" nz-button nzType="primary">
+                <span nz-icon nzTheme="outline" nzType="save"></span>
+                Save
+            </button>
+        </nz-form-control>
+    </nz-form-item>
+
+</form>
+

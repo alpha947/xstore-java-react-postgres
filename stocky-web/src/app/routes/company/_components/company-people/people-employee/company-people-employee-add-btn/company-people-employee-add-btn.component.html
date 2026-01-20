@@ -1,0 +1,283 @@
+<app-button [props]="{handler: toggle, title: 'Add', icon: 'plus'}"></app-button>
+
+<ng-container *ngIf="popup.display == ModalOrDrawer.DRAWER; else modalTmpl">
+    <nz-drawer
+        (nzOnClose)="toggle()"
+        [nzBodyStyle]="{ overflow: 'auto' }"
+        [nzFooter]="contentFooterBtnTmpl"
+        [nzMaskClosable]="false"
+        [nzVisible]="showDrawer"
+        [nzWidth]="drawerWidth"
+        nzTitle="Add New Employee"
+    >
+        <div *nzDrawerContent>
+            <ng-container
+                [ngTemplateOutletContext]="{form: form}"
+                [ngTemplateOutlet]="contentFormTmpl"
+            ></ng-container>
+        </div>
+    </nz-drawer>
+</ng-container>
+
+<ng-template #modalTmpl>
+    <nz-modal
+        (nzOnCancel)="toggle()"
+        (nzOnOk)="onCreate()"
+        [(nzVisible)]="showModal"
+        [nzMaskClosable]="false"
+        nzTitle="Add New Employee"
+    >
+        <div *nzModalContent [nzLg]="{ span: 24, offset: 0 }" [nzXs]="{ span: 24, offset: 0 }" nz-col>
+            <ng-container [ngTemplateOutletContext]="{form: form}" [ngTemplateOutlet]="contentFormTmpl"></ng-container>
+        </div>
+        <div *nzModalFooter>
+            <ng-container [ngTemplateOutlet]="contentFooterBtnTmpl"></ng-container>
+        </div>
+
+    </nz-modal>
+</ng-template>
+
+<ng-template #contentFormTmpl>
+    <form (submit)="onCreate()"
+          [formGroup]="form"
+          autocomplete="off"
+          nz-form
+          nzLayout="vertical"
+    >
+        <div [nzSpan]="24" nz-col>
+
+            <nz-collapse nzAccordion>
+
+                <nz-collapse-panel
+                    [ngStyle]="{border:  getNzFormControlValidStatus('personalDetail', form)=='error'? '0.7px solid red': ''}"
+                    nzHeader="Personal Basic Details"
+                >
+                    <div formGroupName="personalDetail">
+
+                        <nz-form-item>
+                            <nz-form-label>First Name</nz-form-label>
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('employeeFirstName', getFormGroup('personalDetail'))"
+                                             nzErrorTip="">
+                                <input
+                                    formControlName="employeeFirstName"
+                                    name="firstName"
+                                    nz-input
+                                    placeholder="Enter first name"
+                                    type="text"
+                                />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Last Name</nz-form-label>
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('employeeLastName', getFormGroup('personalDetail'))"
+                                             nzErrorTip="">
+                                <input
+                                    formControlName="employeeLastName"
+                                    name="lastName"
+                                    nz-input
+                                    placeholder="Enter last name"
+                                    type="text"
+                                />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Email</nz-form-label>
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('employeeEmail', getFormGroup('personalDetail'))"
+                                             nzErrorTip="">
+                                <input
+                                    formControlName="employeeEmail"
+                                    name="email"
+                                    nz-input
+                                    placeholder="Enter email"
+                                    type="email"
+
+                                />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Phone</nz-form-label>
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('employeePhone', getFormGroup('personalDetail'))"
+                                             nzErrorTip="">
+                                <input
+                                    formControlName="employeePhone"
+                                    name="phone"
+                                    nz-input
+                                    placeholder="Enter phone number"
+                                    type="text"
+                                />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Date of birth</nz-form-label>
+                            <nz-form-control
+                                [nzValidateStatus]="getNzFormControlValidStatus('employeeDateOfBirth', getFormGroup('personalDetail'))"
+                                nzErrorTip=""
+                            >
+                                <app-date-picker
+                                    (selectChange)="onDateOfBirthChange($event)" [select]="dateOfBirth"
+                                ></app-date-picker>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Address</nz-form-label>
+
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('employeeAddress', getFormGroup('personalDetail'))"
+                                             nzErrorTip="">
+                                <textarea formControlName="employeeAddress" name="employeeAddress"
+                                          nz-input
+                                          placeholder="Enter address "
+                                ></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </nz-collapse-panel>
+
+                <nz-collapse-panel [ngStyle]="{border:  getNzFormControlValidStatus('nokDetail', form)=='error'? '0.7px solid red': ''}"
+                                   nzHeader="Emergency Contact Details">
+                    <div formGroupName="nokDetail">
+
+                        <nz-form-item>
+                            <nz-form-label>Nok. Full Name</nz-form-label>
+                            <nz-form-control
+                                [nzValidateStatus]="getNzFormControlValidStatus('nokFullName', getFormGroup('nokDetail'))"
+                                nzErrorTip="">
+                                <input
+                                    formControlName="nokFullName"
+                                    name="nokFullName"
+                                    nz-input
+                                    placeholder="Enter NOK full name"
+                                    type="text"
+                                />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Nok. Phone</nz-form-label>
+                            <nz-form-control
+                                [nzValidateStatus]="getNzFormControlValidStatus('nokPhone', getFormGroup('nokDetail'))"
+                                nzErrorTip="">
+                                <input
+                                    formControlName="nokPhone"
+                                    name="phone"
+                                    nz-input
+                                    placeholder="Enter phone number"
+                                    type="text"
+                                />
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Nok. Address</nz-form-label>
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('nokAddress', getFormGroup('nokDetail'))"
+                                             nzErrorTip="">
+                                <textarea formControlName="nokAddress"
+                                          name="nokAddress"
+                                          nz-input
+                                          placeholder="Enter address "
+                                ></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Relationship with Nok.</nz-form-label>
+                            <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('nokRelationship', getFormGroup('nokDetail'))"
+                                             nzErrorTip="">
+                                <nz-select formControlName="nokRelationship" nzPlaceHolder="Select relationship with nok">
+                                    <nz-option *ngFor="let item of relationshipsWithNok" [nzLabel]="item.title!" [nzValue]="item.title"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                    </div>
+                </nz-collapse-panel>
+
+                <nz-collapse-panel
+                    [hidden]="isUpdating"
+                    [ngStyle]="{border:  getNzFormControlValidStatus('personalDetail', form)=='error'? '0.7px solid red': ''}"
+                    [nz-tooltip]="isUpdating? toolTmpl : ''"
+                    [nzDisabled]="isUpdating"
+                    nzHeader="Account Details"
+                >
+                    <ng-template #toolTmpl>
+                        <span> Please click
+                            <strong (click)="routeToAuthentication()" class="light-green pointer">here</strong>
+                              to update employee account details.
+                        </span>
+                    </ng-template>
+                    <div formGroupName="accountDetail">
+
+                        <nz-form-item>
+                            <nz-form-label>Account Role</nz-form-label>
+                            <nz-form-control
+                                [nzSpan]="24"
+                                [nzValidateStatus]="getNzFormControlValidStatus('roles', getFormGroup('accountDetail'))"
+                                nzErrorTip=""
+                            >
+                                <div nz-row nzGutter="4">
+                                    <div nz-col nzFlex="auto">
+                                        <app-company-role-search-dropdown
+                                            [form]="{formGroup: getFormGroup('accountDetail'), controlName: 'roles'}"
+                                            [mode]="'multiple'"
+                                        ></app-company-role-search-dropdown>
+                                    </div>
+                                    <div nz-col nz-tooltip nzFlex="30px" nzTooltipPlacement="top" nzTooltipTitle="Update roles">
+                                        <app-company-role-add-btn
+                                            [popup]="{display: ModalOrDrawer.MODAL}"
+                                            class="mt3"
+                                        ></app-company-role-add-btn>
+                                    </div>
+
+                                </div>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Account Expiration Date</nz-form-label>
+                            <nz-form-control
+                                [nzValidateStatus]="getNzFormControlValidStatus('expirationDate', getFormGroup('accountDetail'))"
+                                nzErrorTip="">
+                                <app-date-picker
+                                    (selectChange)="onAccountExpirationDateChange($event)" [select]="expiryDate"
+                                ></app-date-picker>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Account Username</nz-form-label>
+                            <nz-form-control
+                                [nzSpan]="24"
+                                [nzValidateStatus]="getNzFormControlValidStatus('username', getFormGroup('accountDetail'))"
+                                nzErrorTip=""
+                            >
+                                <input disableAutocomplete formControlName="username" nz-input placeholder="Enter username"/>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label>Account Password</nz-form-label>
+                            <app-password-input
+                                [form]="getFormGroup('accountDetail')"
+                                [props]="{formControlName: 'password', size: 'default'}"></app-password-input>
+                        </nz-form-item>
+                    </div>
+
+                </nz-collapse-panel>
+
+            </nz-collapse>
+
+        </div>
+
+    </form>
+</ng-template>
+
+<ng-template #contentFooterBtnTmpl>
+    <div class="fl">
+        <button (click)="toggle(ModalOrDrawer.ANY)" nz-button nzType="default">Cancel</button>
+        <button (click)="onCreate()" [nzLoading]="isLoading" nz-button nzType="primary">Submit</button>
+    </div>
+</ng-template>

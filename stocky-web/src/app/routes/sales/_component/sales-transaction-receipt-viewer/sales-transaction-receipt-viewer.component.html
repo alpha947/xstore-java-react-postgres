@@ -1,0 +1,27 @@
+<div class="pdf-viewer-box">
+    <div class="tc">
+        <ng-container *ngIf="showControls">
+            <div class="mb3 flex flex-row justify-start w-100">
+                <app-simple-button
+                    [action]="printAction" [args]="data" buttonText="Print"
+                    class="mr2" icon="printer"></app-simple-button>
+
+                <app-simple-button
+                    [action]="downloadAction" [args]="data" [disabled]="!isContentLoaded"
+                    buttonText="Download" class="mr2" icon="download"
+                ></app-simple-button>
+                
+            </div>
+        </ng-container>
+    </div>
+</div>
+<ng-container *ngIf="resourceUrl; else emptyTemplateRef">
+    <div class="pdf-container">
+        <!--<object [attr.data]="resourceUrl" style="min-height: 550px;" type="application/pdf"></object>-->
+        <iframe [src]="resourceUrl"></iframe>
+    </div>
+</ng-container>
+<ng-template #emptyTemplateRef>
+    <nz-empty></nz-empty>
+</ng-template>
+

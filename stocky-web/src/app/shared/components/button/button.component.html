@@ -1,0 +1,16 @@
+<button (click)="props.handler(props.args)"
+        [class]="btnClass"
+        [disabled]="disabled"
+        [nzLoading]="props.isLoading!"
+        [nzSize]="props.size!"
+        [nzTooltipTitle]="toolTip"
+        [nzType]="props.type!"
+        nz-button
+        nz-tooltip
+        type="button"
+>
+    <ng-container *ngIf="props.title">
+        <span *ngIf="showTitle" [innerText]="props.title"></span>
+    </ng-container>
+    <span [class]="props.iconCss" nz-icon nzType="{{props.icon}}"></span>
+</button>

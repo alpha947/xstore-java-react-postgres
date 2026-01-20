@@ -1,0 +1,55 @@
+<app-table
+    (pageIndexChange)="onPageIndexChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    [(pageIndex)]="pageRequest.pageNumber"
+    [(pageSize)]="pageRequest.pageSize"
+    [colHeadings]="tableCols"
+    [dataList]="tableData"
+    [props]="{showPagination: true, isLoading: isLoadingTable, tableLayout: 'auto', tableSize: 'default'}"
+    [rowTemplates]="[ actionTmpl, fullNameTmpl, emailTmpl, phoneTmpl, roleTmpl, statusTmpl,expDateTmpl]"
+></app-table>
+
+<ng-template #fullNameTmpl let-item="item">
+    <app-table-item [content]="nameConcat"></app-table-item>
+    <ng-template #nameConcat>
+        <span>{{ item.name}}</span>
+    </ng-template>
+</ng-template>
+
+<ng-template #emailTmpl let-item="item">
+    <app-table-item [content]="item.username"></app-table-item>
+</ng-template>
+
+<ng-template #phoneTmpl let-item="item">
+    <app-table-item [content]="item.phone"></app-table-item>
+</ng-template>
+
+<ng-template #roleTmpl let-item="item">
+    <app-user-roles [roles]="item.roles"></app-user-roles>
+</ng-template>
+
+<ng-template #statusTmpl let-item="item">
+    <app-record-status-badge [status]="item.isActiveStatus"></app-record-status-badge>
+</ng-template>
+
+<ng-template #expDateTmpl let-item="item">
+    <app-table-item content="{{item.expiryDate | date}}"></app-table-item>
+</ng-template>
+
+<ng-template #actionTmpl let-item="item">
+    <div class="fl">
+        <app-account-update-icon [account]="item">
+        </app-account-update-icon>
+        
+        <app-update-delete-action
+            [buttons]="[TableButtonEnum.TOGGLE_STATUS]"
+            [item]="item"
+            [props]="{
+            saveEditHandler: emptyAction,
+            cancelEditHandler: emptyAction,
+            toggleEditHandler: emptyAction,
+            confirmToggleStatusHandler: handleStatusUpdate
+            }"
+        ></app-update-delete-action>
+    </div>
+</ng-template>

@@ -1,0 +1,40 @@
+<form (ngSubmit)="onCreate()" [formGroup]="form" nz-form nzLayout="vertical">
+    <div [nzGutter]="[8, 8]" nz-row nzAlign="bottom">
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label>Location Title</nz-form-label>
+                <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('title', form)" nzErrorTip="">
+                    <input formControlName="title" nz-input placeholder="Enter title"/>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label>Location Type</nz-form-label>
+                <nz-form-control [nzValidateStatus]="getNzFormControlValidStatus('type', form)" nzErrorTip="">
+                    <nz-select [nzShowSearch]="true" formControlName="type" nzPlaceHolder="Select location type">
+                        <nz-option *ngFor="let item of types" [nzLabel]="item?.type!.replaceAll('_', ' ')" [nzValue]="item.type"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+            <app-textarea-limit [props]="{
+                showLabel: true,
+                labelText: 'Description',
+                formGroup: form,
+                fromControlName: 'description'
+            }"></app-textarea-limit>
+
+            <nz-form-item nz-col nzSpan="24">
+                <nz-form-control>
+                    <button [disabled]="!form.valid" [nzLoading]="isSaving" nz-button nzType="primary">
+                        Save <span nz-icon nzTheme="outline" nzType="save"></span>
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+</form>

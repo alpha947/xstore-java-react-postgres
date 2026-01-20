@@ -1,0 +1,55 @@
+<div class="table-container" style="overflow-x:auto;">
+
+    <ng-container *ngIf="dataList | async as list; else noData">
+        <nz-table
+            (nzPageIndexChange)="onPageIndexChange($event)"
+            (nzPageSizeChange)="onPageSizeChange($event)"
+            [nzBordered]="true"
+            [nzData]="list"
+            [nzLoading]="props?.isLoading === true"
+            [nzPageIndex]="pageIndex"
+            [nzPageSize]="pageSize"
+            [nzShowPagination]="props?.showPagination"
+            [nzShowSizeChanger]="true"
+            [nzSize]="props?.tableSize!"
+            [nzTableLayout]="props?.tableLayout!"
+            nzPaginationType="small"
+        >
+            <thead>
+            <tr>
+                <th [nzShowCheckbox]="true" nzWidth="4%"></th>
+                <th *ngFor="let col of colHeadings"
+                    [nzWidth]="col.width + '%'"
+                    class="no-wrap"
+                    scope="col"
+                >
+                    <span class="text-bold">
+                        {{col.title | uppercase }}
+                    </span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of list">
+                <td [nzShowCheckbox]="true"></td>
+                <td *ngFor="let row of rowTemplates" class="nowrap-cell">
+                    <ng-template [ngTemplateOutletContext]="{ item: item }" [ngTemplateOutlet]="row">
+                    </ng-template>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </ng-container>
+
+</div>
+
+<ng-template #noData>
+    <nz-table [nzData]="[]">
+        <thead>
+        <tr></tr>
+        </thead>
+        <tbody>
+        <tr></tr>
+        </tbody>
+    </nz-table>
+</ng-template>

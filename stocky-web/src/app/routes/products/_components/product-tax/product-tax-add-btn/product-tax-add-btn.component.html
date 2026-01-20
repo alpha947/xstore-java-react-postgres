@@ -1,0 +1,18 @@
+<app-button
+    [props]="{
+    icon: props.icon,
+    handler: showModal,
+    size: props.size,
+    title: props.title
+    }"
+></app-button>
+
+<nz-modal (nzOnCancel)="isVisible = false"
+          [(nzVisible)]="isVisible"
+          [nzFooter]="' '"
+          nzTitle="Tax Setup"
+>
+    <ng-container *nzModalContent>
+        <app-product-tax-add [props]="{showTable: props.showTable, showForm: props.showForm}"></app-product-tax-add>
+    </ng-container>
+</nz-modal>

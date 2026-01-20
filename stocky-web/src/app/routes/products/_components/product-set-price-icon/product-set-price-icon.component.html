@@ -1,0 +1,25 @@
+<app-icon-button
+    [nzDropdownMenu]="menu"
+    icon="calculator"
+    nz-dropdown
+    nzPlacement="topLeft"
+    nzTrigger="click"
+></app-icon-button>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu>
+        <li (click)="toggleModalVisibility(ModalType.PRICE)" nz-menu-item>Set Price</li>
+        <li (click)="toggleModalVisibility(ModalType.QUANTITY)" nz-menu-item>Set Quantity</li>
+        <li (click)="toggleModalVisibility(ModalType.DISCOUNT)" nz-menu-item>Set Discount</li>
+    </ul>
+</nz-dropdown-menu>
+
+<!--Price Modal-->
+<app-product-price-modal [product]="product" [visibility]="isPriceModalVisible"></app-product-price-modal>
+
+<!--Quantity Modal-->
+<app-product-quantity-modal [product]="product" [visibility]="isQtyModalVisible"></app-product-quantity-modal>
+
+<!--Discount Modal-->
+<app-product-discount-modal [product]="product" [visibility]="isDiscountModalVisible"></app-product-discount-modal>
+

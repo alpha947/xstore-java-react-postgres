@@ -1,0 +1,11 @@
+<span [class]="class"
+      [nzPopoverContent]="props?.content ?? content ??  contentArea " [nzPopoverTitle]="props?.title ?? 'HELP'"
+      nz-icon
+      nz-popover
+      nzTheme="outline" nzType="info-circle"
+>
+    <ng-template #contentArea>
+        <ng-content></ng-content>
+    </ng-template>
+
+</span>

@@ -1,0 +1,221 @@
+<page-header [action]="action" [breadcrumb]="breadcrumb" [content]="content" title="Products">
+    <ng-template #breadcrumb>
+        <app-breadcrumbs [crumbs]="crumbs"></app-breadcrumbs>
+    </ng-template>
+
+    <ng-template #action>
+        <app-expand-collapse-button [(open)]="isOpenHeader"></app-expand-collapse-button>
+    </ng-template>
+
+    <ng-template #content>
+
+        <form *ngIf="isOpenHeader" autocomplete="off" class="ph-main" nz-form>
+
+            <div [nzGutter]="[12, 24]" nz-row>
+
+                <div nz-col nzSpan="24">
+                    <div [nzGutter]="[12, 16]" nz-row>
+                        <div [nzLg]="8" [nzSpan]="8" [nzXs]="24" nz-col>
+                            <app-product-category-search
+                                [(selected)]="searchPayload.category"></app-product-category-search>
+                        </div>
+
+                        <div [nzLg]="8" [nzSpan]="8" [nzXs]="24" nz-col>
+                            <nz-form-item>
+                                <nz-form-label>Name</nz-form-label>
+                                <input [(ngModel)]="searchPayload.productName" name="productName" nz-input
+                                       placeholder="Enter product name"
+                                       type="text"/>
+                            </nz-form-item>
+                        </div>
+
+                        <div [nzLg]="8" [nzSpan]="8" [nzXs]="24" nz-col>
+                            <nz-form-item>
+                                <nz-form-label>Brand</nz-form-label>
+                                <input [(ngModel)]="searchPayload.brandName" name="productBrand" nz-input
+                                       placeholder="Enter product brand"
+                                       type="text"/>
+                            </nz-form-item>
+                        </div>
+                    </div>
+
+                    <div [nzGutter]="[12, 16]" nz-row>
+                        <div [nzLg]="8" [nzSpan]="8" [nzXs]="24" nz-col>
+                            <nz-form-item>
+                                <nz-form-label>Tax</nz-form-label>
+                                <app-product-tax-dropdown [(value)]="searchPayload.taxes"
+                                                          class="wd-100p"></app-product-tax-dropdown>
+                            </nz-form-item>
+                        </div>
+
+                        <div [nzLg]="8" [nzSpan]="8" [nzXs]="24" nz-col>
+                            <nz-form-item>
+                                <nz-form-label>Sku</nz-form-label>
+                                <input [(ngModel)]="searchPayload.sku" name="productSku" nz-input
+                                       placeholder="Enter product SKU" type="text"/>
+                            </nz-form-item>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div nz-col nzSpan="24">
+                <div nz-row nzJustify="space-between">
+                    <div [nzLg]="12" [nzSpan]="12" [nzXs]="10" nz-col>
+                        <app-search-reset-button
+                            [props]="{
+                                onSearchAction: onSearchProducts,
+                                isLoadingSearchResult: isLoading,
+                                onResetAction: onResetSearchForm,
+                                onCancelAction: onCancelHandler
+                                }"
+                        ></app-search-reset-button>
+                    </div>
+
+                    <div [nzLg]="12" [nzSpan]="12" [nzXs]="10" class="text-align-end" nz-col>
+                        <nz-space nzSize="small">
+                            <app-button *nzSpaceItem
+                                        [props]="{title: 'Add', icon: 'plus', handler: onToggleCreateProductDrawer}"></app-button>
+
+                            <app-export-upload-button
+                                *nzSpaceItem [onDownload]="handleExportData" [onUpload]="handleUpload"
+                            ></app-export-upload-button>
+
+                        </nz-space>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </ng-template>
+
+</page-header>
+
+<nz-card>
+    <app-table
+        (pageIndexChange)="onPageIndexChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+        [(pageIndex)]="pageRequest.pageNumber"
+        [(pageSize)]="pageRequest.pageSize"
+        [colHeadings]="tableCols"
+        [dataList]="tableData!"
+        [props]="{showPagination: true, isLoading: isLoadingTable}"
+        [rowTemplates]="[
+        actionIconsTmpl, categoryTmpl, prodNameTmpl,
+        brandNameTmpl, costPriceTmpl,marginPriceTmpl,
+        sellingPriceTmpl, discountTmpl, skuTmpl,
+        quantityTmpl, typeTmpl,
+        taxesTmpl, statusTmpl, dateTmpl]"
+    ></app-table>
+</nz-card>
+
+<ng-template #actionIconsTmpl let-item="item">
+    <div class="fl">
+        <app-product-set-price-icon
+            (productChange)="onProductPriceChange($event)"
+            [product]="item"
+            nz-tooltip
+            nzTooltipPlacement="bottom"
+            nzTooltipTitle="Set price or quantity"
+        ></app-product-set-price-icon>
+
+        <app-icon-button
+            [icon]="'like'"
+            nz-tooltip
+            nzTooltipTitle="Update product status"></app-icon-button>
+
+        <app-icon-button
+            [action]="onToggleCreateProductDrawer"
+            [args]="item"
+            [icon]="'edit'"
+            nz-tooltip
+            nzTooltipTitle="Edit product details"
+        ></app-icon-button>
+
+    </div>
+</ng-template>
+
+<ng-template #categoryTmpl let-item="item">
+    <app-table-item [content]="item.basic?.productCategory?.title?? ''"></app-table-item>
+</ng-template>
+
+<ng-template #prodNameTmpl let-item="item">
+    <app-table-item [content]="item?.basic?.productName?? ''"></app-table-item>
+</ng-template>
+
+<ng-template #brandNameTmpl let-item="item">
+    <app-table-item [content]="item?.basic?.brandName??''"></app-table-item>
+</ng-template>
+
+<ng-template #sellingPriceTmpl let-item="item">
+    <app-amount-currency [amount]="item?.price?.sellingPrice"></app-amount-currency>
+</ng-template>
+
+<ng-template #costPriceTmpl let-item="item">
+    <app-amount-currency [amount]="item?.price?.costPrice?? 0"></app-amount-currency>
+</ng-template>
+
+<ng-template #marginPriceTmpl let-item="item">
+    <app-table-item [content]="item?.price?.markup??0"></app-table-item>
+</ng-template>
+
+<ng-template #discountTmpl let-item="item">
+    <app-table-item [content]="item?.price?.discount??0"></app-table-item>
+</ng-template>
+
+<ng-template #skuTmpl let-item="item">
+    <app-table-item [content]="item?.basic?.sku??''"></app-table-item>
+</ng-template>
+
+<ng-template #quantityTmpl let-item="item">
+    <app-table-item [content]="item?.basic?.quantity??0"></app-table-item>
+</ng-template>
+
+<ng-template #typeTmpl let-item="item">
+    <!--    <app-table-item [content]="item.basic.isService === true ? 'SERVICE' : 'PRODUCT'"></app-table-item>-->
+    <app-table-item [content]="''"></app-table-item>
+</ng-template>
+
+<ng-template #taxesTmpl let-item="item">
+    <app-table-item [content]="concatProductTax(item.basic.taxes)"></app-table-item>
+</ng-template>
+
+<ng-template #statusTmpl let-item="item">
+    <app-table-item [content]="item.basic?.status?.title??''"></app-table-item>
+</ng-template>
+
+<ng-template #dateTmpl let-item="item">
+    <app-table-item [content]="dateCreatedAtTmpl"></app-table-item>
+    <ng-template #dateCreatedAtTmpl>
+        <label>{{item?.createdAt | date}}</label>
+    </ng-template>
+</ng-template>
+
+<nz-drawer
+    (nzOnClose)="showDrawer = !showDrawer"
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzFooter]="contentFooterBtnTmpl"
+    [nzMaskClosable]="false"
+    [nzVisible]="showDrawer"
+    [nzWidth]="size"
+    nzTitle="Add Product"
+>
+    <div *nzDrawerContent>
+        <app-product-add
+            #productAddComponent
+            (response)="handleFormResponse($event)"
+            [product]="productToUpdate"
+            style="background: white; margin-top: -2em"
+        ></app-product-add>
+    </div>
+</nz-drawer>
+
+<ng-template #contentFooterBtnTmpl>
+    <div class="fl">
+        <button (click)="showDrawer = !showDrawer" nz-button nzType="default">Cancel</button>
+        <button (click)="callComponentCreateHandler()" [nzLoading]="isLoading" nz-button nzType="primary">Submit
+        </button>
+    </div>
+</ng-template>

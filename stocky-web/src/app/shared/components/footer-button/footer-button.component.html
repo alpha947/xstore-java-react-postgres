@@ -1,0 +1,6 @@
+<div class="fl">
+
+    <button (click)="action.cancelAction!(props?.cancelArgs)" nz-button style="margin-right: 8px;">Cancel</button>
+
+    <button (click)="action.submitAction!()" [disabled]="isSaving" [nzLoading]="isSaving" nz-button nzType="primary">Submit</button>
+</div>
